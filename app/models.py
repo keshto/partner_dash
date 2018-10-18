@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
+
+class AppUser(AbstractUser):
+    # add additional fields in here
+
+    def __str__(self):
+        return self.username
+
+class Card(models.Model):
+    author = models.ForeignKey(
+      get_user_model(),
+      on_delete=models.CASCADE
+    )
+    body = models.CharField(max_length=1000)
+    date = models.DateTimeField('date created', default=timezone.now)
+
+    def __str__(self):
+      return "%s (%s)" % (self.body, self.author.get_full_name())
+
+    class Meta:
+      ordering = ['date',]
+
+class Comment(models.Model):
+    card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(
+      get_user_model(),
+      on_delete=models.CASCADE
+    )
+    body = models.CharField(max_length=1000)
+    date = models.DateTimeField('date created', default=timezone.now)
+
+    def __str__(self):
+      return "%s (%s)" % (self.body, self.author.get_full_name())
+
+    class Meta:
+      ordering = ['date',]

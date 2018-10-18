@@ -1,0 +1,76 @@
+{% load tz %}
+{% timezone "US/Pacific" %}
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Partner Dash</title>
+  
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
+</head>
+<body>
+{% if user.is_authenticated %}
+  <div class="share">
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    <form action="share/" method="post">
+      {% csrf_token %}
+      <input type="textarea" name="data" value="" autofocus />
+      <input type="submit" value="Share" />
+    </form>
+  </div>
+  <div class="row">  
+    {% regroup cards by date|date:"m-d-Y" as objects_by_day %}
+    {% for d in objects_by_day %}
+      <div class="column">
+      <h4 class="column_header">
+        {% now "m-d-Y" as todays_date %}
+        {% if todays_date == d.grouper %}
+          Today {% else %} {{ d.grouper }}
+        {% endif %}
+      </h4>
+      
+      {% for card in d.list %}
+        <div class="card">
+          <div class="header">
+            <div class="author">{{ card.author.get_full_name }}</div>
+            <div class="time">{{ card.date|date:"P" }}</div>
+          </div>
+          {{ card.body }}
+          {% for comment in card.comments.all %}
+            <div class="comment">
+              <div class="header">
+                <div class="author">{{ card.author.get_full_name }}</div>
+                <div class="time">{{ card.date|date:"P" }}</div>
+              </div>
+              {{ comment.body }}
+            </div>
+          {% endfor %}
+          <div class="reply">
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+            <form action="reply/{{ card.id }}" method="post">
+              {% csrf_token %}
+              <input type="textarea" name="data" value="" />
+              <input type="submit" value="Reply" />
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</body>
+<footer>
+
+  Logged in as {{ user.get_username }} <a class="button" href="{% url 'logout' %}">Logout</a>
+{% else %}
+</body>
+<footer>
+  <a class="button" href="{% url 'slack:begin' 'slack' %}">Login</a>
+{% endif %}
+</footer>
+</html>
+
+{% endtimezone %}
