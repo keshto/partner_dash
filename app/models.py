@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 
 class AppUser(AbstractUser):
-    # add additional fields in here
+    avatar512 = models.CharField(max_length=500)
 
     def __str__(self):
         return self.username

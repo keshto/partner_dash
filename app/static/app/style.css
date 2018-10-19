@@ -64,13 +64,21 @@
     padding: 0 5px;
     margin-right: 5px;
     border-radius: 5px;
-    margin-left: -5px;
+    margin-left: -3px;
     font-size: smaller;
     display: flex;
 }
 
+.header > img {
+    width: 24px;
+    height: 24px;
+    margin: 2px;
+}
+
 .author {
     flex: 1;
+    display: flex;
+    align-items: center;
 }
 
 .time {
@@ -78,9 +86,9 @@
 }
 
 .comment {
-    background: #F9F9F9;
-    margin-left: 10px;
-    padding: 5px;
+    background: #eee;
+    margin-left: 20px;
+    padding: 1px;
     border: 2px solid #EEEEEE !important;
     border-radius:3px;
 }
