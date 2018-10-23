@@ -10,52 +10,100 @@
   
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
 </head>
 <body>
 {% if user.is_authenticated %}
-  <div class="share">
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    <form action="share/" method="post">
-      {% csrf_token %}
-      <input type="textarea" name="data" value="" autofocus />
-      <input type="submit" value="Share" />
-    </form>
+  <div class="pagination">
+    <span class="step-links">
+      {% if paginator.has_next %}
+        <a href="?page={{ paginator.next_page_number }}">older</a>
+      {% endif %}
+      {% if paginator.has_previous %}
+        <a href="?page={{ paginator.previous_page_number }}">newer</a>
+      {% endif %}
+    </span>
   </div>
-  <div class="row">  
-    {% regroup cards by date|date:"m-d-Y" as objects_by_day %}
-    {% for d in objects_by_day %}
+  <div class="row">
+    {% for k,v in cards.items %}
       <div class="column">
-      <h4 class="column_header">
-        {% now "m-d-Y" as todays_date %}
-        {% if todays_date == d.grouper %}
-          Today {% else %} {{ d.grouper }}
-        {% endif %}
-      </h4>
-      
-      {% for card in d.list %}
+        <h4 class="column_header">
+          {{ k }}
+        </h4>
+      {% if forloop.last %}
+      <div class="card share flex">
+        <img class="avatar" src="{{ user.avatar512 }}">
+        <form class="form-input flex1" action="share/" method="post">
+          {% csrf_token %}
+            <label>
+              <textarea rows="2" name="data" required></textarea>
+              <span class="placeholder">Post an update</span>
+            </label>
+        </form>
+      </div>
+      {% endif %}
+
+      {% for card in v %}
+
+        {% if card.assigned %}
         <div class="card">
-          <div class="header">
-            <img src="{{ card.author.avatar512 }}">
-            <div class="author">{{ card.author.get_full_name }}</div>
-            <div class="time">{{ card.date|date:"P" }}</div>
+          <div class="card assigned">
+            <img src="{{ card.assigned.avatar512 }}">
           </div>
-          {{ card.body }}
-          {% for comment in card.comments.all %}
-            <div class="comment">
-              <div class="header">
-                <img src="{{ card.author.avatar512 }}">
-                <div class="author">{{ card.author.get_full_name }}</div>
-                <div class="time">{{ card.date|date:"P" }}</div>
+        {% else %}
+        <div class="card">
+        {% endif %}
+
+          <div class="header">
+            {% for partner in card.related_partners.all %}
+            <div class="chip">
+              <img src={{ partner.logo }}>
+              {{ partner.name }}
+            </div>
+            {% endfor %}
+            <span class="flex1"></span>
+            {% if card.assigned and card.assigned.username == user.username %}
+            <a href="claim/{{ card.id }}"><i class="material-icons" id="font">indeterminate_check_box</i></a>
+            {% else %}
+            <a href="claim/{{ card.id }}"><i class="material-icons" id="font">check_box</i></a>
+            {% endif %}
+          </div>
+          <hr>
+          <div class="content_body">
+            <div class="flex">
+              <img class="avatar" src="{{ card.author.avatar512 }}">
+              <div class="full_width">
+                <div class="flex">
+                  <div class="author flex1">{{ card.author.get_full_name }}</div>
+                  <div class="time">{{ card.date|date:"P" }}</div>
+                </div>
+                {{ card.body }}
               </div>
-              {{ comment.body }}
+            </div>
+          </div>
+          {% for comment in card.comments.all %}
+            <div class="comment content_body">
+              <div class="flex">
+                <img class="avatar" src="{{ card.author.avatar512 }}">
+                <div class="full_width">
+                  <div class="flex">
+                    <div class="author flex1">{{ card.author.get_full_name }}</div>
+                    <div class="time">{{ card.date|date:"P" }}</div>
+                  </div>
+                  {{ comment.body }}
+                </div>
+              </div>
             </div>
           {% endfor %}
           <div class="reply">
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-            <form action="reply/{{ card.id }}" method="post">
+            <form class="form-input" action="reply/{{ card.id }}" method="post">
               {% csrf_token %}
-              <input type="textarea" name="data" value="" />
-              <input type="submit" value="Reply" />
+                <label>
+                  <input name="data" required>
+                  <span class="placeholder">Reply</span>
+                </label>
             </form>
           </div>
         </div>

@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^share/', views.share, name='share'),
     url(r'^reply/(?P<card_id>[0-9]+)$', views.reply, name='reply'),
+    url(r'^claim/(?P<card_id>[0-9]+)$', views.claim, name='claim'),
     url('', include('social_django.urls', namespace='slack')),
     url(r'^logout/', views.logout, name='logout'),
 ]

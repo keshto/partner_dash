@@ -1,7 +1,179 @@
-.share {
-    margin-bottom: 3px;
-    text-align: right;
+.form-input label {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 35px;
 }
+.form-input .placeholder {
+  position: absolute;
+  display: block;
+  top: 13px;
+  z-index: 2;
+  font-size: 14px;
+  transition: all 200ms ease-in-out;
+  width: 100%;
+  cursor: text;
+  padding: 0 5px;
+}
+.form-input input,
+.form-input textarea {
+  position: absolute;
+  top: 15px;
+  z-index: 1;
+  width: 100%;
+  font-size: 16px;
+  border: 0;
+  border-bottom: 1px solid grey;
+  transition: border-color 200ms ease-in-out;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  background-color: #FAFAFA;
+  border-radius: 5px;
+  text-indent: 5px;
+}
+
+.form-input textarea {
+  position: unset;
+}
+
+.form-input textarea {
+  padding-top: 12px;
+}
+.form-input input {
+  height: 20px;
+}
+.form-input input:focus,
+.form-input input:valid,
+.form-input textarea:focus,
+.form-input textarea:valid {
+  border-bottom: 2px solid #008CBA;
+}
+.form-input input:focus + .placeholder,
+.form-input input:valid + .placeholder,
+.form-input textarea:focus + .placeholder,
+.form-input textarea:valid + .placeholder {
+  top: 0;
+  cursor: inherit;
+  font-size: 10px;
+  color: #008CBA;
+}
+
+.form-input input:required, .form-input textarea:required {
+  box-shadow: none;
+}
+
+/* ---- ^^ material input text ^^ ----
+https://medium.com/@asked_io/material-design-styled-inputs-with-css-626e7f01681a
+<div class="form-input">
+  <label>
+    <input required>
+    <span class="placeholder">Text Input</span>
+  </label>
+</div>
+<div class="form-input">
+  <label>
+    <textarea rows="10" required></textarea>
+    <span class="placeholder">Textarea</span>
+  </label>
+</div>
+-------------------------------------- */
+
+* {
+    transition: all 0.125s ease-in-out;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    margin: 0;
+    background-color: #ECECEC;
+    cursor: default;
+    user-select: none;
+}
+
+.card{
+    background-color: #FAFAFA;
+    color: #555;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    padding-top: 2px;
+    margin-top: 5px;
+    border-radius:5px;
+    position: relative;
+}
+
+.card.assigned{
+  background-color:rgba(0,0,0,.2);
+  position:absolute;
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  margin:auto;
+  transition:all .4s ease-in;
+  z-index: 3;
+}
+
+.card.assigned img{
+    float: right;
+    height: 64px;
+    width: 64px;
+    border-radius: 5px;
+    border: 1px solid;
+    box-shadow: 0 1px 3px green;
+}
+
+.card:hover .card.assigned{
+  opacity:0;
+  visibility: hidden;
+}
+
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #E1E1E1;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+.header > i {
+    transition: color 0.25s ease-in-out;
+    cursor: pointer;
+    font-size: 28px;
+    border: 2px solid #008CBA;
+    border-radius: 5px;
+    margin: 0 2px;
+}
+
+.header > i:hover {
+    color: #222;
+    background-color: #008CBA;
+}
+/* --------------------- */
+
+.chip {
+  display: flex;
+  background: lightblue;
+  padding: 0 7px;
+  border-radius: 32px;
+  font-size: 13px;
+  height: 28px;
+  line-height: 28px;
+  margin-right: 6px;
+}
+
+.chip > img {
+  float: left;
+  background: white;
+  width: 28px;
+  border-radius: 50%;
+  text-align: center;
+  color: white;
+  margin: 0 3px 0 -12px;
+  border: 1px solid lightblue;
+}
+
+/* ------------------ */
 
 .button {
     padding: 5px;
@@ -14,7 +186,7 @@
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     cursor: pointer;
-    background-color: white; 
+    background-color: #FAFAFA; 
     color: black; 
     border: 2px solid #008CBA;
 }
@@ -26,13 +198,16 @@
 
 .column {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #AAA;
+    padding: 8px;
 }
 
 .column_header {
-    margin: 0px;
+    margin: 0px -3px;
     text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    padding: 2px 8px;
+    border-radius: 1px;
+    background-color: #FDFDFD;
 }
 
 .row {
@@ -47,48 +222,66 @@
     }
 }
 
-.card {
-    padding: 2px 8px;
-    margin-top: 5px;
-    border-radius:5px;
-    /* Add shadows to create the "card" effect */
-    box-shadow: 0 0px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-}
 
 .header {
-    font-weight: bold;
-    color: #333;
-    background-color: lightblue;
-    border: 1px solid #EEEEEE;
-    padding: 0 5px;
-    margin-right: 5px;
-    border-radius: 5px;
-    margin-left: -3px;
-    font-size: smaller;
+    display: flex;
+    padding: 0 8px;
+}
+
+.flex1 {
+    flex: 1;
+}
+
+.flex {
     display: flex;
 }
 
-.header > img {
-    width: 24px;
-    height: 24px;
+.column {
+    flex-direction: column;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
     margin: 2px;
+    border-radius:5px;
+    margin: 0 10px;
+}
+
+.share {
+    background-color: #CCCCFF;
+}
+
+.share .avatar {
+    align-self: center;
 }
 
 .author {
-    flex: 1;
     display: flex;
     align-items: center;
+    font-weight: bold;
+    padding-bottom: 1px;
+    color: #333;
 }
 
 .time {
-    font-size: smaller;
+    font-size: small;
+    color: #777;
+}
+
+.content_body {
+    padding: 10px 2px;
 }
 
 .comment {
-    background: #eee;
-    margin-left: 20px;
-    padding: 1px;
-    border: 2px solid #EEEEEE !important;
-    border-radius:3px;
+    background: #F2F2F2;
+    border-bottom: 1px solid #AAA;
+}
+
+.full_width {
+    width: 100%;
+}
+
+.comment .avatar {
+    border-radius: 50%;
 }
