@@ -231,6 +231,7 @@ hr {
 
 .main {
     margin: 10px;
+    margin-top: 15px;
 }
 
 .pagination{
@@ -246,6 +247,12 @@ nav{
 
 nav ul li {
     height: 48px;
+}
+
+nav a.btn{
+    margin: 0 5px!important;
+    margin-bottom: 3px!important;
+    padding: 0!important;
 }
 
 .user_dropdown{

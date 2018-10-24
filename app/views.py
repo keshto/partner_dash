@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout as logout_user
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-from app.models import Card, Comment, AppUser
+from app.models import Partner, Card, Comment, AppUser
 
 def logout(request):
   logout_user(request)
@@ -37,6 +37,12 @@ def index(request):
   } if request.user.is_authenticated else {}
 
   return render(request, 'app/index.html', context)
+
+def partners(request):
+  context = {
+    'partners': Partner.objects.all(),
+  } if request.user.is_authenticated else {}
+  return render(request, 'app/partners.html', context)
 
 def share(request):
   data = request.POST['data']

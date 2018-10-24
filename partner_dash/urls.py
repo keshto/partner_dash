@@ -21,6 +21,7 @@ from app import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
+    url(r'^partners/', views.partners, name='partners'),
     url(r'^share/', views.share, name='share'),
     url(r'^reply/(?P<card_id>[0-9]+)$', views.reply, name='reply'),
     url(r'^claim/(?P<card_id>[0-9]+)$', views.claim, name='claim'),

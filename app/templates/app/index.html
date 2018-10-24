@@ -28,15 +28,15 @@
   <li><a href="{% url 'logout' %}">Logout</a></li>
 </ul>
 <nav>
-  <div class="nav-wrapper ">
+  <div class="nav-wrapper white">
     <ul class="hide-on-med-and-down">
-      <li><a href="sass.html">Sass</a></li>
-      <li><a href="badges.html">Components</a></li>
+      <li class="active"><a class="black-text" href="/">Team Activity</a></li>
+      <li><a class="black-text" href="partners/">Partners</a></li>
     </ul>
     <ul class="right hide-on-med-and-down">
       <!-- Dropdown Trigger -->
-      <li><a class="dropdown-trigger user_dropdown" href="#!" data-target="dropdown_user">
-        <img src="{{ user.avatar512 }}"><i class="material-icons right">arrow_drop_down</i>
+      <li><a class="waves-effect waves-light btn blue dropdown-trigger user_dropdown" href="#!" data-target="dropdown_user">
+        <img src="{{ user.avatar512 }}"><i class="black-text material-icons right">arrow_drop_down</i>
       </a></li>
     </ul>
   </div>
