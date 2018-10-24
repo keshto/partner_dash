@@ -10,36 +10,59 @@
   
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
+  <script src="{% static 'app/scripts.js' %}"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
 </head>
 <body>
-{% if user.is_authenticated %}
-  <div class="pagination">
-    <span class="step-links">
-      {% if paginator.has_next %}
-        <a href="?page={{ paginator.next_page_number }}">older</a>
-      {% endif %}
-      {% if paginator.has_previous %}
-        <a href="?page={{ paginator.previous_page_number }}">newer</a>
-      {% endif %}
-    </span>
+{% if not user.is_authenticated %}
+  <a class="button" href="{% url 'slack:begin' 'slack' %}">Login</a>
+{% else %}
+
+<!-- Dropdown Structure -->
+<ul id="dropdown_user" class="dropdown-content">
+  <li><a href="#!">Settings</a></li>
+  <li class="divider"></li>
+  <li><a href="{% url 'logout' %}">Logout</a></li>
+</ul>
+<nav>
+  <div class="nav-wrapper ">
+    <ul class="hide-on-med-and-down">
+      <li><a href="sass.html">Sass</a></li>
+      <li><a href="badges.html">Components</a></li>
+    </ul>
+    <ul class="right hide-on-med-and-down">
+      <!-- Dropdown Trigger -->
+      <li><a class="dropdown-trigger user_dropdown" href="#!" data-target="dropdown_user">
+        <img src="{{ user.avatar512 }}"><i class="material-icons right">arrow_drop_down</i>
+      </a></li>
+    </ul>
   </div>
-  <div class="row">
+</nav>
+        
+
+  <div class="row main">
+    {% if paginator.has_next %}
+      <a href="?page={{ paginator.next_page_number }}">
+        <i class="material-icons pagination" id="font">arrow_left</i>
+      </a>
+    {% endif %}
     {% for k,v in cards.items %}
       <div class="column">
-        <h4 class="column_header">
+        <h6 class="column_header">
           {{ k }}
-        </h4>
+        </h6>
       {% if forloop.last %}
-      <div class="card share flex">
+      <div class="custom_card share flex">
         <img class="avatar" src="{{ user.avatar512 }}">
         <form class="form-input flex1" action="share/" method="post">
           {% csrf_token %}
-            <label>
-              <textarea rows="2" name="data" required></textarea>
-              <span class="placeholder">Post an update</span>
-            </label>
+          <div class="input-field">
+            <textarea id="share" name="data" class="materialize-textarea" data-length="1000"></textarea>
+            <label for="share">Post an update</label>
+          </div>
         </form>
       </div>
       {% endif %}
@@ -47,12 +70,12 @@
       {% for card in v %}
 
         {% if card.assigned %}
-        <div class="card">
-          <div class="card assigned">
+        <div class="custom_card">
+          <div class="custom_card assigned">
             <img src="{{ card.assigned.avatar512 }}">
           </div>
         {% else %}
-        <div class="card">
+        <div class="custom_card">
         {% endif %}
 
           <div class="header">
@@ -100,27 +123,24 @@
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
             <form class="form-input" action="reply/{{ card.id }}" method="post">
               {% csrf_token %}
-                <label>
-                  <input name="data" required>
-                  <span class="placeholder">Reply</span>
-                </label>
+              <div class="input-field">
+                <input id="reply{{card.pk}}" name="data" type="text" class="validate">
+                <label for="reply{{card.pk}}">Reply</label>
+              </div>
             </form>
           </div>
         </div>
       {% endfor %}
       </div>
     {% endfor %}
+    {% if paginator.has_previous %}
+      <a href="?page={{ paginator.previous_page_number }}">
+        <i class="material-icons pagination" id="font">arrow_right</i>
+      </a>
+    {% endif %}
   </div>
-</body>
-<footer>
-
-  Logged in as {{ user }} <a class="button" href="{% url 'logout' %}">Logout</a>
-{% else %}
-</body>
-<footer>
-  <a class="button" href="{% url 'slack:begin' 'slack' %}">Login</a>
 {% endif %}
-</footer>
+</body>
 </html>
 
 {% endtimezone %}
