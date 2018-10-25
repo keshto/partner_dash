@@ -66,8 +66,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
     'social_django',
+    'materializecssform',
+    'app',
 ]
 
 MIDDLEWARE = [

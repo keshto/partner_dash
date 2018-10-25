@@ -15,6 +15,9 @@
         "{{ partner.name }}": "{{ partner.logo }}",
         {% endfor %}
       },
+      onAutocomplete: function(val) {
+        window.location.href = '?partner=' + val;
+      },
     };
   </script>
   
@@ -27,6 +30,7 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
 </head>
 <body>
+{% load materializecss %}
 {% if not user.is_authenticated %}
   <a class="button" href="{% url 'slack:begin' 'slack' %}">Login</a>
 {% else %}
@@ -40,8 +44,8 @@
 <nav>
   <div class="nav-wrapper white">
     <ul class="hide-on-med-and-down">
-      <li class="active"><a class="black-text" href="/">Team Activity</a></li>
-      <li><a class="black-text" href="partners/">Partners</a></li>
+      <li><a class="black-text" href="/">Team Activity</a></li>
+      <li class="active"><a class="black-text" href="partners/">Partners</a></li>
     </ul>
     <ul class="right hide-on-med-and-down">
       <!-- Dropdown Trigger -->
@@ -51,16 +55,94 @@
     </ul>
   </div>
 </nav>
-        
 
-  <div class="row main">
-    
-    <div class="input-field">
-      <i class="material-icons prefix">textsms</i>
-      <input type="text" id="autocomplete-input" class="autocomplete">
-      <label for="autocomplete-input">Autocomplete</label>
+  <div class="main">
+    <div class="card partner_card">
+      <div class="partner_search input-field">
+        <input type="text" id="autocomplete-input" class="autocomplete">
+        <label for="autocomplete-input">Search for a partner:</label>
+      </div>
+
+      <ul class="tabs">
+        <li class="tab"><a href="#partner_list">Partners</a></li>
+        <li class="tab {% if not partner %} disabled {% endif %}">
+          <a {% if partner and not form.errors and not form_details.errors %} class="active"{% endif %} href="#partner_activity">Partner Activity</a>
+        </li>
+        <li class="tab {% if not partner %} disabled {% endif %}">
+          <a {% if partners and form_details.errors %} class="active"{% endif %} href="#partner_details">Partner Details</a>
+        </li>
+        <li class="tab"><a {% if form.errors %} class="active"{% endif %} href="#add_partner">Add a New Partner</a></li>
+      </ul>
+
+      <div class="tab_content">
+        <div id="partner_list" class="flex flex_wrap">
+          {% for partner in partners %}
+          <a href="?partner={{ partner.pk }}"><img src="{{ partner.logo }}" class="partner_badge"></a>
+          {% endfor %}
+        </div>
+        <div id="partner_activity">
+          {% if not partner.cards.all %}
+          <div class="card">
+            <div class="content_body">
+              No activity for this partner :(
+            </div>
+          </div>
+          {% endif %}
+          {% for card in partner.cards.all %}
+          <div class="card">
+            <div class="content_body">
+              <div class="flex">
+                <img class="avatar" src="{{ card.author.avatar512 }}">
+                <div class="full_width">
+                  <div class="flex">
+                    <div class="author flex1">{{ card.author.get_full_name }}</div>
+                    <div class="time">{{ card.date|date:"P" }}</div>
+                  </div>
+                  {{ card.body }}
+                </div>
+              </div>
+            </div>
+            {% for comment in card.comments.all %}
+              <div class="comment content_body">
+                <div class="flex">
+                  <img class="avatar" src="{{ card.author.avatar512 }}">
+                  <div class="full_width">
+                    <div class="flex">
+                      <div class="author flex1">{{ card.author.get_full_name }}</div>
+                      <div class="time">{{ card.date|date:"P" }}</div>
+                    </div>
+                    {{ comment.body }}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+        <div id="partner_details">
+          <form class="form-input partner_form" action="/partners/" method="post">
+            {% csrf_token %}
+            {{ form_details|materializecss }}
+            <input type="hidden" id="partnerID" name="partnerID" value="{{ partner.pk }}">
+            <button class="btn waves-effect waves-light blue" type="submit" name="action">Update
+              <i class="material-icons right">sync</i>
+            </button>
+            <a class="waves-effect waves-light btn red" href="/delete/{{ partner.pk }}">Delete
+              <i class="material-icons right">delete</i>
+            </a>
+          </form>
+        </div>
+        <div id="add_partner">
+          <form class="form-input partner_form" action="/partners/" method="post">
+            {% csrf_token %}
+            {{ form|materializecss }}
+            <button class="btn waves-effect waves-light blue" type="submit" name="action">Save
+              <i class="material-icons right">send</i>
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
-
   </div>
 {% endif %}
 </body>

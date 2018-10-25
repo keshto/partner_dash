@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.forms import ModelForm, Textarea
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
@@ -13,12 +14,23 @@ class AppUser(AbstractUser):
         return self.username
 
 class Partner(models.Model):
-  name = models.CharField(max_length=200)
+  name = models.CharField(max_length=200, primary_key=True)
   description = models.CharField(max_length=1000)
   logo = models.CharField(max_length=500)
 
   def __str__(self):
       return "%s" % (self.name)
+
+class PartnerForm(ModelForm):
+  class Meta:
+    model = Partner
+    fields = ['name', 'logo', 'description']
+    labels = {
+      'logo': ('Logo URL'),
+    }
+    widgets = {
+      'description': Textarea(attrs={'class':'materialize-textarea',}),
+    }
 
 class Card(models.Model):
     author = models.ForeignKey(

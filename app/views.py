@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout as logout_user
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-from app.models import Partner, Card, Comment, AppUser
+from app.models import Partner, Card, Comment, AppUser, PartnerForm
 
 def logout(request):
   logout_user(request)
@@ -39,10 +39,38 @@ def index(request):
   return render(request, 'app/index.html', context)
 
 def partners(request):
+  if request.method == 'POST':
+    partner_id = request.POST.get('partnerID')
+    
+    if partner_id:
+      partner = get_object_or_404(Partner, pk=partner_id)
+      form = PartnerForm(request.POST, instance=partner)
+    else:
+      form = PartnerForm(request.POST)
+      partner = None
+    
+    if form.is_valid():
+      partner = Partner(**form.cleaned_data)
+      partner.save()
+      return HttpResponseRedirect('/partners/?partner=%s' % partner_id if partner_id else '/partners/')
+
+  # if a GET (or any other method) we'll create a blank form
+  else:
+    form = PartnerForm(auto_id=True)
+    partner = get_object_or_404(Partner, pk=request.GET.get('partner')) if request.GET.get('partner') else None
+
   context = {
+    'partner': partner,
+    'form': form,
+    'form_details': PartnerForm(instance=partner),
     'partners': Partner.objects.all(),
   } if request.user.is_authenticated else {}
   return render(request, 'app/partners.html', context)
+
+def partner_delete(request, partner_id):
+  partner = get_object_or_404(Partner, pk=partner_id)
+  partner.delete()
+  return HttpResponseRedirect('/partners/')
 
 def share(request):
   data = request.POST['data']

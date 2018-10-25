@@ -5,4 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var elems = document.querySelectorAll('.autocomplete');
   var instances = M.Autocomplete.init(elems, auto_options);
+
+  var tab_options = {}
+  var elems = document.querySelectorAll('.tabs')
+  var instance = M.Tabs.init(elems, tab_options);
 });

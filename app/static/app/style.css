@@ -12,28 +12,29 @@ body {
 }
 
 /* --- Fix CSS for input to fit custom cards */
-input[type="text"], .input-field{
+.custom_card input[type="text"], 
+.custom_card .input-field{
     height: auto!important;
     margin-bottom: 0!important;
     border-radius: 5px!important;
 }
 
-input[type="text"] {
+.custom_card input[type="text"] {
     padding-bottom: 2px!important;
     text-indent: 5px!important;
 }
 
-.input-field > label{
+.custom_card .input-field > label{
     top: -15px!important;
     left: 5px!important;
 }
 
-.input-field > label:not(.label-icon).active {
+.custom_card .input-field > label:not(.label-icon).active {
     -webkit-transform: translateY(-1px) scale(0.8)!important;
     transform: translateY(-1px) scale(0.8)!important;
 }
 
-textarea.materialize-textarea{
+.custom_card textarea.materialize-textarea{
     margin: 0!important;
 }
 /* -------------------- */
@@ -122,27 +123,6 @@ hr {
 
 /* ------------------ */
 
-.button {
-    padding: 5px;
-    border-radius: 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-    cursor: pointer;
-    background-color: #FAFAFA; 
-    color: black; 
-    border: 2px solid #008CBA;
-}
-
-.button:hover {
-    background-color: #008CBA;
-    color: white;
-}
-
 .column {
     flex: 1;
     padding: 8px;
@@ -157,10 +137,6 @@ hr {
     background-color: #FDFDFD;
 }
 
-.row {
-    display: flex;
-}
-
 /* Responsive layout - makes the columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
     .column {
@@ -168,7 +144,6 @@ hr {
         width: 100%;
     }
 }
-
 
 .header {
     display: flex;
@@ -181,6 +156,10 @@ hr {
 
 .flex {
     display: flex;
+}
+
+.flex_wrap{
+    flex-wrap: wrap;
 }
 
 .column {
@@ -266,4 +245,35 @@ nav a.btn{
 }
 .user_dropdown img{
     height: inherit;
+}
+
+.partner_card{
+   padding: 5px 10px 
+}
+
+.partner_search{
+    width: 90%;
+    left: 5%;
+}
+
+.partner_badge{
+    height: 64px;
+    width: 64px;
+    border-radius: 50%;
+    padding: 1px;
+    border: 1px solid gray;
+    margin: 0 2px;
+}
+
+.tab_content{
+    padding: 10px 5px;
+}
+
+.partner_form{
+    padding: 10px 20px;
+}
+
+/* We want the logo on the left */
+.autocomplete-content img.right{
+    float: left!important;
 }
