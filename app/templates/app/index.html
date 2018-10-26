@@ -97,7 +97,7 @@
         {% endif %}
 
           <div class="header">
-            <div class="chips flex1"></div>
+            <div class="chips chips-autocomplete flex1"></div>
             {% for partner in card.related_partners.all %}
             <div class="chip blue lighten-4">
               <img src={{ partner.logo }}>
@@ -118,7 +118,7 @@
               <div class="full_width">
                 <div class="flex">
                   <div class="author flex1">{{ card.author.get_full_name }}</div>
-                  <div class="time">{{ card.date|date:"m/d - P" }}</div>
+                  <div class="time">{{ card.date|date:"m/d - P" }} - {{ card.created|date:"m/d - P" }}</div>
                 </div>
                 {{ card.body | linebreaks }}
               </div>
@@ -131,7 +131,7 @@
                 <div class="full_width">
                   <div class="flex">
                     <div class="author flex1">{{ comment.author.get_full_name }}</div>
-                    <div class="time">{{ comment.date|date:"m/d - P" }}</div>
+                    <div class="time">{{ comment.created|date:"m/d - P" }}</div>
                   </div>
                   {{ comment.body | linebreaks }}
                 </div>

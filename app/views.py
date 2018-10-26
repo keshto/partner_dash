@@ -29,11 +29,11 @@ def index(request):
   cards = list()
   for d in days:
     k = 'Today' if d == d.today() else d.strftime('%a - %b. %d, %Y')
-    cards.append((k,Card.objects.filter(date__date=d).prefetch_related('comments', 'author', 'assigned', 'related_partners')))
+    cards.append((k,Card.objects.filter(date__date=d).order_by('-date').prefetch_related('comments', 'author', 'assigned', 'related_partners')))
 
   context = {
     'paginator': days,
-    'cards': cards,
+    'cards': cards if cards else [('Today', None)],
     'partners': Partner.objects.all(),
   } if request.user.is_authenticated else {}
 
@@ -87,6 +87,7 @@ def reply(request, card_id):
     author = get_object_or_404(AppUser, pk=request.user.pk)
     comment = card.comments.create(author=author, body=data)
     comment.save()
+    card.save()
   return HttpResponseRedirect('/')
 
 def claim(request, card_id):

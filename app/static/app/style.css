@@ -57,6 +57,25 @@ body {
 }
 /* -------------------- */
 
+/* FIX autocomplete content rendering for dropdown */
+.custom_card .autocomplete-content{
+    width: unset;
+    height: unset;
+}
+.custom_card .autocomplete-content > li{
+    display: flex;
+}
+
+.custom_card .autocomplete-content > li > img{
+    margin: 5px 3px;
+    border: 1px solid lightgray;
+}
+
+.custom_card .autocomplete-content > li > span{
+    padding: 14px 5px;
+}
+/* -------------------- */
+
 .custom_card{
     background-color: #FAFAFA;
     color: #555;

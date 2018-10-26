@@ -11,6 +11,5 @@ document.addEventListener('DOMContentLoaded', function() {
   var instance = M.Tabs.init(elems, tab_options);
 
   var elems = document.querySelectorAll('.chips');
-  console.debug(chip_options.autocompleteOptions)
   var instances = M.Chips.init(elems, chip_options);
 });
