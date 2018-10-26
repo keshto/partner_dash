@@ -12,30 +12,48 @@ body {
 }
 
 /* --- Fix CSS for input to fit custom cards */
-.custom_card input[type="text"], 
-.custom_card .input-field{
+.reply input[type="text"], 
+.reply .input-field{
     height: auto!important;
     margin-bottom: 0!important;
     border-radius: 5px!important;
 }
 
-.custom_card input[type="text"] {
+.reply input[type="text"] {
     padding-bottom: 2px!important;
     text-indent: 5px!important;
 }
 
-.custom_card .input-field > label{
+.reply .input-field > label{
     top: -15px!important;
     left: 5px!important;
 }
 
-.custom_card .input-field > label:not(.label-icon).active {
+.reply .input-field > label:not(.label-icon).active {
     -webkit-transform: translateY(-1px) scale(0.8)!important;
     transform: translateY(-1px) scale(0.8)!important;
 }
 
-.custom_card textarea.materialize-textarea{
+.share .input-field{
+    padding-right: 10px;
+}
+
+.share textarea.materialize-textarea{
     margin: 0!important;
+}
+
+.custom_card .chips{
+    margin: 0;
+    min-height: unset;
+}
+
+.custom_card .chips input{
+    height: auto;
+}
+
+.custom_card .chips input::placeholder,
+.custom_card .chips input::-moz-placeholder{
+    color: gray;
 }
 /* -------------------- */
 
@@ -75,6 +93,10 @@ body {
   visibility: hidden;
 }
 
+.custom_card p{
+    margin: 0;
+}
+
 
 hr {
     border: none;
@@ -97,31 +119,10 @@ hr {
     color: #222;
     background-color: #008CBA;
 }
-/* --------------------- */
-
-.chip {
-  display: flex;
-  background: lightblue;
-  padding: 0 7px;
-  border-radius: 32px;
-  font-size: 13px;
-  height: 28px;
-  line-height: 28px;
-  margin-right: 6px;
-}
 
 .chip > img {
-  float: left;
-  background: white;
-  width: 28px;
-  border-radius: 50%;
-  text-align: center;
-  color: white;
-  margin: 0 3px 0 -12px;
   border: 1px solid lightblue;
 }
-
-/* ------------------ */
 
 .column {
     flex: 1;
@@ -152,6 +153,10 @@ hr {
 
 .flex1 {
     flex: 1;
+}
+
+.flex_reverse{
+    flex-direction: row-reverse;
 }
 
 .flex {
@@ -189,6 +194,10 @@ hr {
 .time {
     font-size: small;
     color: #777;
+}
+
+.multiline {
+    white-space: pre-wrap;
 }
 
 .content_body {

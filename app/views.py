@@ -26,14 +26,15 @@ def index(request):
     # If page is out of range (e.g. 9999), deliver last page of results.
     days = paginator.page(paginator.num_pages)
 
-  cards = dict()
+  cards = list()
   for d in days:
     k = 'Today' if d == d.today() else d.strftime('%a - %b. %d, %Y')
-    cards[k] = Card.objects.filter(date__date=d)
+    cards.append((k,Card.objects.filter(date__date=d).prefetch_related('comments', 'author', 'assigned', 'related_partners')))
 
   context = {
     'paginator': days,
     'cards': cards,
+    'partners': Partner.objects.all(),
   } if request.user.is_authenticated else {}
 
   return render(request, 'app/index.html', context)
@@ -83,7 +84,8 @@ def reply(request, card_id):
   card = get_object_or_404(Card, pk=card_id)
   data = request.POST.get('data')
   if data:
-    comment = card.comments.create(author=request.user, body=data)
+    author = get_object_or_404(AppUser, pk=request.user.pk)
+    comment = card.comments.create(author=author, body=data)
     comment.save()
   return HttpResponseRedirect('/')
 

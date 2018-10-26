@@ -8,13 +8,31 @@
 
   <title>Partner Dash</title>
   
-  {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
-  <script src="{% static 'app/scripts.js' %}"></script>
+  <script type="text/javascript">
+    var auto_options = {};
+    var chip_options = {
+      placeholder: 'Enter a partner',
+      secondaryPlaceholder: '+Partner',
+      autocompleteOptions: {
+        data: {
+          {% for partner in partners %}
+          "{{ partner.name }}": "{{ partner.logo }}",
+          {% endfor %}
+        },
+        limit: Infinity,
+        minLength: 1
+      },
+    };
+  </script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
+  <script src="{% static 'app/scripts.js' %}"></script>
+  
 </head>
 <body>
 {% if not user.is_authenticated %}
@@ -43,24 +61,24 @@
 </nav>
         
 
-  <div class="flex main">
-    {% if paginator.has_next %}
-      <a href="?page={{ paginator.next_page_number }}">
-        <i class="material-icons pagination" id="font">arrow_left</i>
+  <div class="flex flex_reverse main">
+    {% if paginator.has_previous %}
+      <a href="?page={{ paginator.previous_page_number }}">
+        <i class="material-icons pagination" id="font">arrow_right</i>
       </a>
     {% endif %}
-    {% for k,v in cards.items %}
+    {% for k,v in cards %}
       <div class="column">
         <h6 class="column_header">
           {{ k }}
         </h6>
-      {% if forloop.last %}
+      {% if forloop.first %}
       <div class="custom_card share flex">
         <img class="avatar" src="{{ user.avatar512 }}">
         <form class="form-input flex1" action="share/" method="post">
           {% csrf_token %}
           <div class="input-field">
-            <textarea id="share" name="data" class="materialize-textarea" data-length="1000"></textarea>
+            <textarea id="share" onkeydown="if (event.keyCode == 13 && !event.shiftKey) { this.form.submit(); event.target.value = ''; return false; }" name="data" class="materialize-textarea" data-length="1000"></textarea>
             <label for="share">Post an update</label>
           </div>
         </form>
@@ -79,13 +97,14 @@
         {% endif %}
 
           <div class="header">
+            <div class="chips flex1"></div>
             {% for partner in card.related_partners.all %}
-            <div class="chip">
+            <div class="chip blue lighten-4">
               <img src={{ partner.logo }}>
               {{ partner.name }}
+              <i class="close material-icons">close</i>
             </div>
             {% endfor %}
-            <span class="flex1"></span>
             {% if card.assigned and card.assigned.username == user.username %}
             <a href="claim/{{ card.id }}"><i class="material-icons" id="font">indeterminate_check_box</i></a>
             {% else %}
@@ -99,22 +118,22 @@
               <div class="full_width">
                 <div class="flex">
                   <div class="author flex1">{{ card.author.get_full_name }}</div>
-                  <div class="time">{{ card.date|date:"P" }}</div>
+                  <div class="time">{{ card.date|date:"m/d - P" }}</div>
                 </div>
-                {{ card.body }}
+                {{ card.body | linebreaks }}
               </div>
             </div>
           </div>
           {% for comment in card.comments.all %}
             <div class="comment content_body">
               <div class="flex">
-                <img class="avatar" src="{{ card.author.avatar512 }}">
+                <img class="avatar" src="{{ comment.author.avatar512 }}">
                 <div class="full_width">
                   <div class="flex">
-                    <div class="author flex1">{{ card.author.get_full_name }}</div>
-                    <div class="time">{{ card.date|date:"P" }}</div>
+                    <div class="author flex1">{{ comment.author.get_full_name }}</div>
+                    <div class="time">{{ comment.date|date:"m/d - P" }}</div>
                   </div>
-                  {{ comment.body }}
+                  {{ comment.body | linebreaks }}
                 </div>
               </div>
             </div>
@@ -133,9 +152,9 @@
       {% endfor %}
       </div>
     {% endfor %}
-    {% if paginator.has_previous %}
-      <a href="?page={{ paginator.previous_page_number }}">
-        <i class="material-icons pagination" id="font">arrow_right</i>
+    {% if paginator.has_next %}
+      <a href="?page={{ paginator.next_page_number }}">
+        <i class="material-icons pagination" id="font">arrow_left</i>
       </a>
     {% endif %}
   </div>
