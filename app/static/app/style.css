@@ -143,6 +143,10 @@ hr {
   border: 1px solid lightblue;
 }
 
+.chip {
+    background-color: lightblue;
+}
+
 .column {
     flex: 1;
     padding: 8px;

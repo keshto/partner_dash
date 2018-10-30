@@ -108,3 +108,21 @@ def claim(request, card_id):
     card.assigned = request.user
     card.save()
   return HttpResponseRedirect('/')
+
+def attach_partner_to_card(request, partner_id, card_id):
+  partner = get_object_or_404(Partner, pk=partner_id)
+  card = get_object_or_404(Card, pk=card_id)
+  
+  # Use partner module so not to update the modified timestamp in cards
+  partner.cards.add(card)
+  partner.save()
+  return HttpResponseRedirect('/')
+
+def detach_partner_to_card(request, partner_id, card_id):
+  partner = get_object_or_404(Partner, pk=partner_id)
+  card = get_object_or_404(Card, pk=card_id)
+  
+  # Use partner module so not to update the modified timestamp in cards
+  partner.cards.remove(card)
+  partner.save()
+  return HttpResponseRedirect('/')

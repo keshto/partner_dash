@@ -22,6 +22,55 @@
         limit: Infinity,
         minLength: 1
       },
+      onChipDelete: function(e, chip){
+        // Hacky way to grab text
+        var tag = chip.textContent.slice(0, -"close".length);
+        var card_id = e[0].id.slice('chips-card'.length)
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'detach_partner_to_card/' + tag+ '/' + card_id, true);
+        xhr.onload = function () {
+            console.log('Response code', xhr.status);
+          };
+        xhr.send(null);
+      },
+      onChipAdd: function(e, chip){
+        
+        var instance = M.Chips.getInstance(e[0]);
+        // Same as chip_options.autocompleteOptions.data
+        var partners = instance.options.autocompleteOptions.data
+        // Hacky way to grab text
+        var tag = chip.textContent.slice(0, -"close".length);
+        var index = instance.chipsData.findIndex(function(chip) {
+          return chip.tag == tag;
+        });
+        var card_id = e[0].id.slice('chips-card'.length)
+
+        // If the entered text is a partner
+        if (partners.hasOwnProperty(tag)){
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', 'attach_partner_to_card/' + tag+ '/' + card_id, true);
+          xhr.onload = function () {
+            console.log('Response code', xhr.status);
+            if (xhr.status != 200){
+              instance.deleteChip(index);
+            }
+          };
+          xhr.send(null);
+
+          // Add the image
+          var image_url = partners[tag];
+          var img = document.createElement("IMG");
+          img.setAttribute("src", image_url);
+          chip.appendChild(img);
+
+        // If not a partner then delete the chip
+        } else {
+          instance.deleteChip(index);
+        };
+        
+        // Fix the weird bug when you add a chip the autocomplete dropdown does not go away.
+        instance.autocomplete.close();
+      },
     };
   </script>
 
@@ -97,14 +146,7 @@
         {% endif %}
 
           <div class="header">
-            <div class="chips chips-autocomplete flex1"></div>
-            {% for partner in card.related_partners.all %}
-            <div class="chip blue lighten-4">
-              <img src={{ partner.logo }}>
-              {{ partner.name }}
-              <i class="close material-icons">close</i>
-            </div>
-            {% endfor %}
+            <div id="chips-card{{card.pk}}" class="chips chips-autocomplete flex1"></div>
             {% if card.assigned and card.assigned.username == user.username %}
             <a href="claim/{{ card.id }}"><i class="material-icons" id="font">indeterminate_check_box</i></a>
             {% else %}
@@ -160,6 +202,24 @@
   </div>
 {% endif %}
 </body>
+{% for k,v in cards %}
+{% for card in v %}
+<script type="text/javascript">
+  elem = document.getElementById("chips-card{{card.pk}}");
+  var options =({
+    data:[
+      {% for partner in card.related_partners.all %}
+      {
+        tag: "{{ partner.name }}",
+        image: "{{ partner.logo }}"
+      },
+      {% endfor %}
+    ],
+  });
+  var instance = M.Chips.init(elem, Object.assign(chip_options, options));
+</script>
+{% endfor %}
+{% endfor %}
 </html>
 
 {% endtimezone %}

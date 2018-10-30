@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^share/', views.share, name='share'),
     url(r'^reply/(?P<card_id>[0-9]+)$', views.reply, name='reply'),
     url(r'^claim/(?P<card_id>[0-9]+)$', views.claim, name='claim'),
+    url(r'^attach_partner_to_card/(?P<partner_id>.+)/(?P<card_id>[0-9]+)$', views.attach_partner_to_card, name='attach_partner_to_card'),
+    url(r'^detach_partner_to_card/(?P<partner_id>.+)/(?P<card_id>[0-9]+)$', views.detach_partner_to_card, name='detach_partner_to_card'),
     url('', include('social_django.urls', namespace='slack')),
     url(r'^logout/', views.logout, name='logout'),
 ]
