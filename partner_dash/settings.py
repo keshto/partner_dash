@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(*rnolt_h$q+m%=*qu2sw4m2$(#@jvlrki@-ql+=kl7ne3t_ac'
+SECRET_KEY = os.environ.get('SECRET_KEY') if os.environ.get('PARTNER_DASH_PROD') else '(*rnolt_h$q+m%=*qu2sw4m2$(#@jvlrki@-ql+=kl7ne3t_ac'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if os.environ.get('PARTNER_DASH_PROD') else True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['partner-dash.cfapps.io',] if os.environ.get('PARTNER_DASH_PROD') else []
 
 # Slack creds
 SOCIAL_AUTH_SLACK_KEY = os.environ.get('SLACK_CLIENT_ID')
@@ -34,6 +34,12 @@ SOCIAL_AUTH_URL_NAMESPACE = 'slack'
 SOCIAL_AUTH_USER_MODEL = 'app.AppUser'
 SOCIAL_AUTH_SLACK_SCOPE = ['identity.basic', 'identity.avatar']
 SOCIAL_AUTH_SLACK_TEAM = 'pivotal-partners'
+if os.environ.get('PARTNER_DASH_PROD'):
+    SOCIAL_AUTH_SLACK_WHITELISTED_DOMAINS = ['pivotal.io',]
+    SOCIAL_AUTH_SLACK_WHITELISTED_EMAILS = [
+        'cdecelles@pivotal.io', 'kmahapatra@pivotal.io', 'gwestenberg@pivotal.io', 'mboldt@pivotal.io',
+        'mjoseph@pivotal.io', 'jknostman@pivotal.io', 'ktakenaga@pivotal.io', 'svennela@pivotal.io',
+    ]
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 

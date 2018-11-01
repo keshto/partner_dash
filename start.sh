@@ -1,7 +1,7 @@
 #!/bin/bash
 
-: "${SOCIAL_AUTH_SLACK_KEY:?needs to be exported}"
-: "${SOCIAL_AUTH_SLACK_SECRET:?needs to be exported}"
+: "${SLACK_CLIENT_ID:?needs to be exported}"
+: "${SLACK_CLIENT_SECRET:?needs to be exported}"
 
 if [ ! -d ".venv" ]; then
   virtualenv .venv
