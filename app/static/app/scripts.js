@@ -13,3 +13,38 @@ document.addEventListener('DOMContentLoaded', function() {
   // var elems = document.querySelectorAll('.chips');
   // var instances = M.Chips.init(elems, chip_options);
 });
+
+// in ms
+var poller_timeout = 3000;
+var poller_url = 'hash/';
+// will update with ajax query
+var poller_hash = -1;
+
+var poller = function() {
+  var httpRequest = new XMLHttpRequest();
+  httpRequest.onreadystatechange = readyStateChanged;
+  httpRequest.open('GET', poller_url);
+  httpRequest.send();
+};
+
+if(document.readyState === 'complete')
+  setTimeout(poller);
+else if(document.addEventListener)
+  document.addEventListener('DOMContentLoaded', poller);
+else
+  window.attachEvent('onload', poller);
+
+var readyStateChanged = function() {
+    if(this.readyState != 4)
+        return;
+    if(this.status == 200) {
+      if (poller_hash < 0) 
+        poller_hash = this.response;
+      else if(poller_hash != this.response){
+        document.getElementById("notification").classList.remove("hide");
+        return
+      };
+    };
+    setTimeout(poller, poller_timeout);
+};
+

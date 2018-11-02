@@ -21,6 +21,7 @@ from app import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
+    url(r'^hash/$', views.hash, name='hash'),
     url(r'^partners/', views.partners, name='partners'),
     url(r'^delete/(?P<partner_id>.+)$', views.partner_delete, name='partner_delete'),
     url(r'^share/', views.share, name='share'),

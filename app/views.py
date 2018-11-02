@@ -8,6 +8,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from app.models import Partner, Card, Comment, AppUser, PartnerForm
 
+
 def logout(request):
   logout_user(request)
   return HttpResponseRedirect('/')
@@ -26,10 +27,11 @@ def index(request):
     # If page is out of range (e.g. 9999), deliver last page of results.
     days = paginator.page(paginator.num_pages)
 
+  _cards = Card.objects.order_by('-date').prefetch_related('comments', 'author', 'assigned', 'related_partners')
   cards = list()
   for d in days:
     k = 'Today' if d == d.today() else d.strftime('%a - %b. %d, %Y')
-    cards.append((k,Card.objects.filter(date__date=d).order_by('-date').prefetch_related('comments', 'author', 'assigned', 'related_partners')))
+    cards.append((k,_cards.filter(date__date=d)))
 
   context = {
     'paginator': days,
@@ -38,6 +40,10 @@ def index(request):
   } if request.user.is_authenticated else {}
 
   return render(request, 'app/index.html', context)
+
+def hash(request):
+  total = Card.objects.count() + Comment.objects.count()
+  return HttpResponse(total)
 
 def partners(request):
   if request.method == 'POST':
